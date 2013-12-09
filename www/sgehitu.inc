@@ -1,20 +1,5 @@
+<?php include_once 'access.inc' ?>
 <?php 
-	function lortuAlarmarenSentsoreak($Aid){
-		include 'konexioa.inc';
-		mysql_select_db($datuBasea,$link);
-		$query="select `s`.`Sid`, `s`.`Sizena` ,`s`.`Segoera` from `Sentsore` as `s` inner join `Alarma` as `a` on `s`.`Jalarma`= `a`.`alarmaid` where `alarmaid`=\"$Aid\"";
-		$Alarmak=mysql_query($query,$link);
- 		if(mysql_num_rows($Alarmak)==0){
-			echo "<script type='text/javascript'> alert('Hutsa Dago, Oraindik ez duzu alarmarik.'); </script>";
-			return false;
-		}else{
-			while($alarma= mysql_fetch_assoc($Alarmak)){
- 				$AlarmaArray[] = $alarma;
-			}
-		}
-		return $AlarmaArray;
-	}
-
 	if(isset($_GET['sen'])){
 		$pId=$_GET['sen'];
 	}

@@ -1,3 +1,4 @@
+<?php include_once 'access.inc' ?>
 <form id="Aberria" class="form-signin" enctype="multipart/form-data" action="erabiltzaile.php?alarma_berria" method='POST'>
 	<fieldset id="fi">
 		<input type="button" id="addbutton" class="btn btn-large btn-primary" onclick="gehitusents()" value="+ sents"></input>

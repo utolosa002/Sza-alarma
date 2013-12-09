@@ -1,24 +1,29 @@
-<?php 
+<?php
+/*
+Funtzio honek alarma berri bat sortzen du datu basean eta alarma berri horren ida 
+erabiltzailearenarekin lotzen du. Honela uneko erabiltzaileari alarma horren jabetza 
+ematen zaio.
+*/
 	function sortuAlarma($pAIzena){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
 		$erabil=$_SESSION["erab"];
-		$query="INSERT INTO `Alarma`(`alarmaid`, `aizena`, `aegoera`) VALUES (\"\",  \"$pAIzena\", 0)";
-		$Alarma=mysql_query($query,$link);
-		$pIda = mysql_insert_id();
-		$query1="SELECT `e`.`iderab` FROM `erabiltzaile` as `e` WHERE `e`.`nicka` =\"$erabil\"";
-		$pIde=mysql_query($query1,$link);
-
+		$query="SELECT `e`.`iderab` FROM `Erabiltzaile` as `e` WHERE `e`.`nicka` =\"$erabil\"";
+		$pIde=mysql_query($query,$link);
 		while($ide= mysql_fetch_row($pIde)){
 			foreach ($ide as $balioa){
-      				$pIde = $balioa[0];
+      				$pIde = $balioa;
 			}
 		}
-
-		$query3="INSERT INTO `erab_alarma`(`iderab`, `alarma`) VALUES (\"$pIde\",\"$pIda\")";
-		$Alarmak2=mysql_query($query3,$link);
-		if(mysql_num_rows($Alarma2)<0){
-			echo "<script type='text/javascript'> alert('Ez duzu sentsorerik sartu'); </script>";
+		$query1="INSERT INTO `Alarma`(`idalarma`, `aizena`, `aegoera`, `jabeiderab`) VALUES (\"\",  \"$pAIzena\", 0,\"$pIde\")";
+		$Alarma1=mysql_query($query1,$link);
+		$pIda = mysql_insert_id();
+		if(mysql_affected_rows()==-1){
+			return 0;
+		}
+		$query2="INSERT INTO `Erab_alarma`(`iderab`, `idalarma`) VALUES (\"$pIde\",\"$pIda\")";
+		$Alarmak2=mysql_query($query2,$link);
+		if(mysql_affected_rows()==-1){
 			return 0;
 		}else{
 			return $pIda;
@@ -26,14 +31,17 @@
 		
 	}
 
+/*
+Funtzio honek sentsore berri bat sortzen du datu basean.
+Sentsore izena eta alarmaren id-a pasa behar zaizkio.
+Boolerra itzultzen du.
+*/
 	function gehituSentsorea($sIzena,$aId){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
-
-		$query="INSERT INTO `Sentsore` (`Sid`, `Jalarma`, `Sizena`, `Segoera`) VALUES (\"\", $aId, \"$sIzena\", 1)";
+		$query="INSERT INTO `Sentsore` (`sid`, `idalarma`, `sizena`, `segoera`) VALUES (\"\", $aId, \"$sIzena\", 1)";
 		$sentsOK=mysql_query($query,$link);
- 		if(mysql_num_rows($sentsOK)==0){
-			echo "<script type='text/javascript'> alert('Ez duzu sentsorerik sartu'); </script>";
+ 		if(mysql_affected_rows()==(-1 || 0)){
 			return false;
 		}else{
 			return true;
@@ -45,10 +53,12 @@
 	$aId=sortuAlarma($pIzena);
 	if ($aId>0){
 		foreach ($_POST['sizena'] as $index => $pIz){
-			gehituSentsorea($pIz,$aId);
+			if(!gehituSentsorea($pIz,$aId)){
+				header("Location: ./erabiltzaile.php?error&e=sgehi");
+			}
 		}	
 		header("Location: ./erabiltzaile.php?sentsoreak");
 	}else{
-		header("Location: ./erabiltzaile.php");
+		header("Location: ./erabiltzaile.php?error&e=salarma");
 	}
 ?>

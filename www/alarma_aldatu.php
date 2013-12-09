@@ -1,45 +1,59 @@
 <?php include 'access.php' ?>  
 <?php 
+/*
+Funtzio honek alarmaren egora aldatzen du.
+alarmaren ida eta egoera pasa behar zaizkio.
+boolearra itzultzen du.
+*/
 	function aldatu_egoera($pId,$pEgoera){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
-		$query="UPDATE `Alarma` SET `aegoera`=\"$pEgoera\" WHERE `alarmaid`=\"$pId\"";
+		$query="UPDATE `Alarma` SET `aegoera`=\"$pEgoera\" WHERE `idalarma`=\"$pId\"";
 		$emaitza=mysql_query($query,$link);
-		if(mysql_num_rows($emaitza)==0){
-			$emaitza=mysql_query($query,$link);
-			echo "<script type='text/javascript'>alert('$pId-ri egoera aldatu diozu'); </script>";
-			return true;
-		}else{
-			echo "<script type='text/javascript'> alert('Kasu! Ezin izan zaio $pId-ri egoera aldatu!'); </script>";
+		if(mysql_affected_rows()<=0){
 			return false;
+		}else{
+			return true;
 		}
 	}
-
+/*
+Funtzio honek alarma ezabatzen du.
+Alarmaren ida pasa behar zaio.
+integer bat itzultzen du.
+*/
 	function alarma_ezabatu($pId){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
-		$query="DELETE FROM `Alarma` WHERE `alarmaid`=\"$pId\"";
-		$query1="DELETE FROM `erab_alarma` WHERE `alarma`=\"$pId\"";
-		$query2="DELETE FROM `Sentsore` WHERE `Jalarma`=\"$pId\"";
+		$erabil=$_SESSION["erab"];
+		$query0="SELECT `e`.`iderab` FROM `Erabiltzaile` as `e` WHERE `e`.`nicka` =\"$erabil\"";
+		$pIde=mysql_query($query0,$link);
+		while($ide= mysql_fetch_row($pIde)){
+			foreach ($ide as $balioa){
+      				$pIde = $balioa;
+			}
+		}
+		$query="DELETE FROM `Alarma` AS `a` WHERE `a`.`idalarma`=\"$pId\" AND `a`.`jabeiderab`=\"$pIde\"";
+		$query1="DELETE FROM `Erab_alarma` WHERE `idalarma`=\"$pId\"";
+		$query2="DELETE FROM `Sentsore` WHERE `jalarma`=\"$pId\"";
 		$emaitza=mysql_query($query,$link);
-		if(mysql_num_rows($emaitza)==0){
+		if(mysql_affected_rows()>0){
 			$emaitza1=mysql_query($query1,$link);
-			if(mysql_num_rows($emaitza1)==0){
+			if(mysql_affected_rows()>0){
 				$emaitza2=mysql_query($query2,$link);
-				if(mysql_num_rows($emaitza2)==0){
-					echo "<script type='text/javascript'>alert('$pId alarma ezabatu duzu'); </script>";
-					return true;
+				if(mysql_affected_rows()>0){
+					return 1;
+					/*sentsoreren bat ere ezabatua*/
 				}else{
-					echo "<script type='text/javascript'>alert('Agian ez zuen sentsorerik, ezin izan da sentsorik ezabatu'); </script>";
-					return false;
+					return 1;
+					/*sentsorerik ez du ezabatu baino alarma bai*/
 				}
 			}else{
-				echo "<script type='text/javascript'>alert('Ezin izan da jaberik lortu.'); </script>";
-				return false;
+				return 0;
+				/*Alarmak gutxienez jabe bat izan behar zuen*/
 			}
 		}else{
-			echo "<script type='text/javascript'> alert('Kasu! Ezin izan da alarma $pId ezabatu!'); </script>";
-			return false;
+			return -1;
+			/*Alarma ezabatzeko jabea izan behar duzu*/
 		}
 	}
 
@@ -55,15 +69,27 @@
 			$pEgoeraBerria="0";
 		}
 		if(isset($_POST['aAldatu'])) {
-			aldatu_egoera($pId,$pEgoeraBerria);
-			header("Location: ./erabiltzaile.php?alarmak");
-		}else if(isset($_POST['aBanatu'])) { 
+			if(aldatu_egoera($pId,$pEgoeraBerria)){
+				header("Location: ./erabiltzaile.php?alarmak");
+			}else{
+				header("Location: ./erabiltzaile.php?error&e=aaldatu");
+			}
+		}else if(isset($_POST['aBanatu'])) {
 			header("Location: ./erabiltzaile.php?elkarbanatu&al=$pId");
+		}else if(isset($_POST['aIkusi'])) { 
+			header("Location: ./erabiltzaile.php?alarma&al=$pId");
 		}else if(isset($_POST['sGehitu'])) { 
 			header("Location: ./erabiltzaile.php?sen_gehitu&sen=$pId");
 		}else if(isset($_POST['aEzabatu'])) {
-			alarma_ezabatu($pId);
-			header("Location: ./erabiltzaile.php?alarmak");
+			$ezabatua=alarma_ezabatu($pId);
+			if($ezabatua==1){
+				header("Location: ./erabiltzaile.php?alarmak");
+			}elseif($ezabatua==0){
+				header("Location: ./erabiltzaile.php?error&e=aezabatu");
+			}elseif($ezabatua==-1){
+				header("Location: ./erabiltzaile.php?error&e=ajabea");
+			}
+			
 		}else{
 			header("Location: ./erabiltzaile.php");
 		}

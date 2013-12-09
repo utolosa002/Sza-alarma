@@ -1,13 +1,16 @@
 <?php include 'access.inc' ?>  
 <?php
+/*
+Funtzio honek uneko erabiltzailea ez diren erabiltzaileak itzultzen ditu (false hutsa bada).
+Uneko erabiltzailea SESSION bidez jasotzen du.
+*/
 	function BesteErabiltzaileak(){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
 		$erabil=$_SESSION["erab"];
-		$query="SELECT `e`.`iderab`,`e`.`nicka`, `e`.`emaila` FROM `erabiltzaile` AS `e` WHERE NOT(`e`.`emaila` =\"$erabil\" OR `e`.`nicka` = \"$erabil\")";
+		$query="SELECT `e`.`iderab`,`e`.`nicka`, `e`.`emaila` FROM `Erabiltzaile` AS `e` WHERE NOT(`e`.`emaila` =\"$erabil\" OR `e`.`nicka` = \"$erabil\")";
  		$Erabiltzaileak=mysql_query($query,$link);
  		if(mysql_num_rows($Erabiltzaileak)==0){
-			echo "<script type='text/javascript'> alert('Hutsa Dago, Ez dago beste erabiltzailerik'); </script>";
 			return false;
 		}else{
 			while($Erabiltzailea= mysql_fetch_assoc($Erabiltzaileak)){
@@ -17,10 +20,15 @@
 		return $ErabiltzaileaArray;
 	}	
 
+/*
+Funtzio honek erabiltzailearen alarmak itzultzen ditu string batean kateaturik. 
+alarmarik ez badu 'alarmarik ez du' stringa itzultzen du.
+Erabiltzailearen ida jaso eta bere alarmak lortzen ditu.
+*/
 	function lortuErabAlarmak($erabil){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
-		$query="SELECT `ea`.`alarma` FROM `erabiltzaile` AS `e` INNER JOIN `erab_alarma` AS `ea` INNER JOIN `Alarma` AS `a` WHERE `ea`.`iderab` = `e`.`iderab` AND `a`.`alarmaid` = `ea`.`alarma` AND  `e`.`iderab` =\"$erabil\"";
+		$query="SELECT `ea`.`idalarma` FROM `Erabiltzaile` AS `e` INNER JOIN `Erab_alarma` AS `ea` INNER JOIN `Alarma` AS `a` WHERE `ea`.`iderab` = `e`.`iderab` AND `a`.`idalarma` = `ea`.`idalarma` AND  `e`.`iderab` =\"$erabil\"";
  		$Alarmak=mysql_query($query,$link);
  		if(mysql_num_rows($Alarmak)==0){
 			return "alarmarik ez du";
@@ -28,9 +36,9 @@
 			while($alarma= mysql_fetch_row($Alarmak)){
 				foreach ($alarma as $balioa){
    					if (!$AlarmaS){
-        					$AlarmaS = $balioa[0];
+        					$AlarmaS = $balioa;
 					}else{
-        					$AlarmaS .= ',' . $balioa[0];
+        					$AlarmaS .= ',' . $balioa;
     					}
 				}
 			}
@@ -43,10 +51,14 @@
 		
 		<?php 
 			if(isset($_GET['al'])) {
-				$pId=$_GET['al'];
+				$paId=$_GET['al'];
 			}
 			$Erabiltzaileak=besteErabiltzaileak();
-			echo "<h2>$pId. alarma elkarbanatu</h2>";
+			if($Erabiltzaileak==false){
+				echo "<h2>Erabiltzaile bakarra zara, ezin duzu elkarbanatu</h2>";
+			}else{
+				echo "<h2>$paId. alarma elkarbanatu</h2>";
+			}
 		?>
 		
 		<form id="zureAlarmak" action="erabiltzailea_aldatu.php" method="post">
@@ -85,9 +97,10 @@
 							}		
 							echo $lerroa."<td><input type=\"radio\" name=\"hautatu\" value=\"$j\"/></td></tr>\n";
 						}
+				echo "<input type=\"hidden\" name=\"idalarma\" value=\"$paId\"/>";
 				?>
 			</table>
-			<button type="submit" class="btn btn-primary btn-large" name="eBanatu" >Erabiltzailearekin elkarbanatu</button>
+			<button type="submit" class="btn btn-primary btn-large" name="eBanatu">Erabiltzailearekin elkarbanatu</button>
 			</fieldset>
 		</form>
  	</div>

@@ -8,12 +8,7 @@ function balioztatu(f)
 		alert("zeoze hutsa da");
 		return false;
 	}else{
-		if (emailaDa(emaila))
-		{
-			return true;
-		}else{		
-			return false;
-		}
+		return emailaDa(emaila);
 	}
 }
 
@@ -32,42 +27,19 @@ function emanbalioa(f,str)
 
 function emailaDa(str)
 {
-	var APos = str.split('@');
-  	var DotPos = str.split('.');
-	var posabildua = str.indexOf('@');
-	var pospuntu = str.indexOf('.');	
-	var azkenpuntu = str.lastIndexOf('.');
- 	var batzatia = str.substring(0,posabildua);
-	var bizatia = str.substring(posabildua+1,pospuntu);
-	var azkenzatia = str.substring(azkenpuntu+1,str.length);
-   	
-	if (2<APos.length){
-		alert("emaila gaizki .. @@");
+	// Ziurtatu '@' karakterea behin, eta behin bakarrik, agertzen dela.
+	if(str.split("@").length != 2)
 		return false;
-	}else{
-		if(batzatia.length<1){
-			alert("emaila gaizki, @ aurretik hutsa");
-			
-			return false;
-		}else{
-			if (azkenpuntu<posabildua) {
-				alert("emaila gaizki, puntua @ aurretik");
-				return false;
-			}else{
-				if(bizatia.length<1){
-					alert("emaila gaizki, @ ondoren hutsa");
-					return false;
-				}else{
-					if(azkenzatia.length<2){
-						alert("emaila gaizki, puntuaren ondoren zerbait jarri");	
-						return false;
-					}else{
-						return true;
-					}
-				}
-			}
-		}
-	}
+	// Ziurtatu '@' karakterea ez dela lehena.
+	if(str.indexOf("@") == 0)
+		return false;
+	// Ziurtatu '@' karakterearen ondoren '.' karaktereren bat badagoela.
+	if(str.lastIndexOf(".") < str.lastIndexOf("@"))
+		return false;
+	// Ziurtatu azkeneko puntuaren atzetik gutxienez beste 2 karaktere daudela.
+	if(str.lastIndexOf(".") + 2 > str.length - 1)
+		return false;
+	return true;
 }
 
 

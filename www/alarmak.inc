@@ -1,13 +1,15 @@
 <?php include 'access.inc' ?>  
 <?php
+/*
+Funtzio honek uneko erabiltzailearen alarmak itzultzen ditu (false hutsa bada).
+*/
 	function lortuZureAlarmak(){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
 		$erabil=$_SESSION["erab"];
-		$query="SELECT `ea`.`alarma`, `a`.`aizena`, `a`.`aegoera` FROM `erabiltzaile` AS `e` INNER JOIN `erab_alarma` AS `ea` INNER JOIN `Alarma` AS `a` WHERE `ea`.`iderab` = `e`.`iderab` AND `a`.`alarmaid` = `ea`.`alarma` AND ( `e`.`emaila` =\"$erabil\" OR `e`.`nicka` = \"$erabil\")";
+		$query="SELECT `ea`.`idalarma`, `a`.`aizena`, `a`.`aegoera` FROM `Erabiltzaile` AS `e` INNER JOIN `Erab_alarma` AS `ea` INNER JOIN `Alarma` AS `a` WHERE `ea`.`iderab` = `e`.`iderab` AND `a`.`idalarma` = `ea`.`idalarma` AND ( `e`.`emaila` =\"$erabil\" OR `e`.`nicka` = \"$erabil\")";
  		$Alarmak=mysql_query($query,$link);
  		if(mysql_num_rows($Alarmak)==0){
-			echo "<script type='text/javascript'> alert('Hutsa Dago, Oraindik ez duzu alarmarik sortu.'); </script>";
 			return false;
 		}else{
 			while($alarma= mysql_fetch_assoc($Alarmak)){
@@ -21,6 +23,9 @@
 	<h2>Alarma guztiak</h2>
 	<?php 
 		$Alarmak=lortuZureAlarmak();
+		if($Alarmak==false) {
+			echo "<table class=\"table table-stripedtable-condensed\"><tr><td><h3>Alarmarik ez daukazu </h3></td></tr></table>";
+		}else{
 	?>
 	<form id="zureAlarmak" action="alarma_aldatu.php" method="post">
 		<fieldset>
@@ -58,9 +63,13 @@
 				?>
 			</table>
 			<button type="submit" class="btn btn-primary btn-large" id="aAldatu" name="aAldatu" >Alarmaren egoera aldatu</button>
+			<button type="submit" class="btn btn-primary btn-large" name="aIkusi" >Alarmaren sentsoreak ikusi</button>
 			<button type="submit" class="btn btn-primary btn-large" name="aBanatu" >Alarma elkarbanatu</button>
 			<button type="submit" class="btn btn-primary btn-large" name="sGehitu" >Sentsorea gehitu</button>
 			<button type="submit" class="btn btn-primary btn-large" name="aEzabatu">Alarma ezabatu</button>
 		</fieldset>
 	</form>
+	<?php
+	}
+	?>
 </div>

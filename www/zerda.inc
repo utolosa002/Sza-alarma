@@ -1,4 +1,4 @@
-<?php if(count(get_included_files()) ==1) header("Location: ./index.php"); 
+<?php
 	$fitx = "./Azalpena.txt";
 	echo readfile($fitx);
 ?>

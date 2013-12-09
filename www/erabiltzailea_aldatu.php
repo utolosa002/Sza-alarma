@@ -1,32 +1,46 @@
 <?php
-	function elkarbanatu($pId,$pEgoera){
+ /*
+Funtzio honek alarma beste erabiltzaile batekin elkarbanatzen du. 
+Erabiltzailearen ida eta alarmaren id-a jaso behar ditu.
+Integer bat itzultzen du.
+*/
+	function elkarbanatu($pIde,$pIda){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
-		$query="INSERT INTO `erab_alarma` as `ea` SET `ea`.`Segoera`=\"$pEgoera\" WHERE `s`.`Sid`=\"$pId\"";
-		$emaitza=mysql_query($query,$link);
-		if(mysql_num_rows($emaitza)==0){
-			echo "$pId aldatu duzu";
-			return true;
+		$erabil=$_SESSION["erab"];
+		if($erabil==$pIde) {
+			$query="INSERT INTO `Erab_alarma`(`iderab`, `idalarma`) VALUES (\"$pIde\",\"$pIda\")";
+			$emaitza=mysql_query($query,$link);
+			if(mysql_affected_rows()<=0){
+				return 0;
+			}else{
+				return 1;
+			}
 		}else{
-			echo "<script type='text/javascript'> alert('Kasu! Ezin izan zaio $pId-ri baimena eman!'); </script>";
-			return false;
-			
+			return -1;
 		}
 	}
 ?>
 <?php
-	if(isset($_POST['hautatu'])) {
-		$pId=$_POST['hautatu'];
-		if(isset($_POST['eBanatu'])) {
-			if(elkarbanatu($pId)){
-				header("Location: ./erabiltzaile.php?erab");
+	if(isset($_POST['idalarma'])) {
+		$pIda=$_POST['idalarma'];
+		if(isset($_POST['hautatu'])) {
+			$pIde=$_POST['hautatu'];
+			if(isset($_POST['eBanatu'])) {
+				if(elkarbanatu($pIde,$pIda)==1){
+					header("Location: ./erabiltzaile.php?erab");
+				}elseif(elkarbanatu($pIde,$pIda)==0){
+					header("Location: ./erabiltzaile.php?error&e=elkar");
+				}elseif(elkarbanatu($pIde,$pIda)==-1){
+					header("Location: ./erabiltzaile.php?error&e=ajabea");
+				}
 			}else{
-				header("Location: ./erabiltzaile.php");
+				header("Location: ./erabiltzaile.php?error&e=elkar");
 			}
 		}else{
-		header("Location: ./erabiltzaile.php");
+			header("Location: ./erabiltzaile.php?error&e=elkar");
 		}
 	}else{
-		header("Location: ./erabiltzaile.php?erab");
+		header("Location: ./erabiltzaile.php?error&e=elkar");
 	}
 ?>

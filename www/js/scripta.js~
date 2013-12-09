@@ -84,7 +84,6 @@ function gehitusents()
 
 function kendusents()
 {	
-
 	var diva = document.getElementById("fi");
 	var zenb = document.getElementsByName("sizena[]").length;
 	if ((zenb-1)==0){
