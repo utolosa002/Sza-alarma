@@ -34,13 +34,13 @@
 					}else if(isset($_GET['sen_berria'])){
 						include('sBerria.php');	
 					}else if(isset($_GET['zerda'])){
-						include('zerda.inc');
+						include('../zerda.inc');
 					}else{
 						include('hasi.inc');
 					}
 	 			?>      
       			</div><!--/hero-unit-->
 		</div><!--/.container-fluid--> 
-		<?php include_once 'oina.inc' ?>
+		<?php include_once '../oina.inc' ?>
 	</body>
 </html>

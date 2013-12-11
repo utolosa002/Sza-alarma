@@ -1,5 +1,3 @@
-<!-- zuzenean atzitu ahal ez izateko-->
-<?php if(count(get_included_files()) ==1) header("Location: ./index.php"); ?>
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<a class="brand" href="./index.php">Alarma!</a>

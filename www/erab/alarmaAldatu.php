@@ -19,28 +19,19 @@ boolearra itzultzen du.
 /*
 Funtzio honek alarma ezabatzen du.
 Alarmaren ida pasa behar zaio.
-integer bat itzultzen du.
-*/
-	function alarma_ezabatu($pId){
+integer bat itzultzen du.*/
+function alarma_ezabatu($pId){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
-		$erabil=$_SESSION["erab"];
-		$query0="SELECT `e`.`iderab` FROM `Erabiltzaile` as `e` WHERE `e`.`nicka` =\"$erabil\"";
-		$pIde=mysql_query($query0,$link);
-		while($ide= mysql_fetch_row($pIde)){
-			foreach ($ide as $balioa){
-      				$pIde = $balioa;
-			}
-		}
-		$query="DELETE FROM `Alarma` AS `a` WHERE `a`.`idalarma`=\"$pId\" AND `a`.`jabeiderab`=\"$pIde\"";
-		$query1="DELETE FROM `Erab_alarma` WHERE `idalarma`=\"$pId\"";
-		$query2="DELETE FROM `Sentsore` WHERE `jalarma`=\"$pId\"";
+		$query="DELETE FROM `Alarma` WHERE `idalarma`=\"$pId\"";
 		$emaitza=mysql_query($query,$link);
-		if(mysql_affected_rows()>0){
-			$emaitza1=mysql_query($query1,$link);
-			if(mysql_affected_rows()>0){
-				$emaitza2=mysql_query($query2,$link);
-				if(mysql_affected_rows()>0){
+		if(mysql_affected_rows()==1){
+			$queryErab_alarma="DELETE FROM `Erab_alarma` WHERE `idalarma`=\"$pId\"";
+			$emaErab_alarma=mysql_query($queryErab_alarma,$link);
+			if(mysql_affected_rows()>=1){
+				$querySentsore="DELETE FROM `Sentsore` WHERE `jalarma`=\"$pId\"";
+				$emaSentsore=mysql_query($querySentsore,$link);
+				if(mysql_affected_rows()>=1){
 					return 1;
 					/*sentsoreren bat ere ezabatua*/
 				}else{
@@ -49,11 +40,11 @@ integer bat itzultzen du.
 				}
 			}else{
 				return 0;
-				/*Alarmak gutxienez jabe bat izan behar zuen*/
+				/*Erab_Alarma loturak ez dira ezabatu*/
 			}
 		}else{
-			return -1;
-			/*Alarma ezabatzeko jabea izan behar duzu*/
+			return 0;
+			/*ez da Alarma ezabatu*/
 		}
 	}
 
@@ -86,10 +77,7 @@ integer bat itzultzen du.
 				header("Location: ./erabiltzaile.php?alarmak");
 			}elseif($ezabatua==0){
 				header("Location: ./erabiltzaile.php?error&e=aezabatu");
-			}elseif($ezabatua==-1){
-				header("Location: ./erabiltzaile.php?error&e=ajabea");
 			}
-			
 		}else{
 			header("Location: ./erabiltzaile.php");
 		}

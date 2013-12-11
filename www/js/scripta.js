@@ -3,9 +3,8 @@ function balioztatu(f)
 	var izena= f.Eizena.value;
 	var emaila =f.EEmaila.value;
 	var pasahitza= f.Epasahitza.value;
-	if(izena==""|| emaila==""||pasahitza==""||izena==" "|| emaila==" "||pasahitza==" ")
-	{
-		alert("zeoze hutsa da");
+	if(izena==""|| emaila==""||pasahitza==""||izena==" "|| emaila==" "||pasahitza==" "){
+		alert("Eremuren bat hutsa da");
 		return false;
 	}else{
 		return emailaDa(emaila);
@@ -14,7 +13,7 @@ function balioztatu(f)
 
 function kendubalioa(f)
 {
-	if(f.value=="izena"||f.value=="pasahitza"||f.value=="emaila"||f.value=="Erabiltzailea"||f.value=="Alarma izena"){
+	if( f.value=="izena" || f.value=="pasahitza" || f.value=="emaila" || f.value=="Erabiltzailea" || f.value=="Alarma izena" || f.value=="Sentsore izena" ){
 		f.value="";
 	}
 }
@@ -27,18 +26,26 @@ function emanbalioa(f,str)
 
 function emailaDa(str)
 {
-	// Ziurtatu '@' karakterea behin, eta behin bakarrik, agertzen dela.
-	if(str.split("@").length != 2)
+	if(str.split("@").length != 2){
+		alert('Ziurtatu "@" karakterea behin, eta behin bakarrik, agertzen dela.!');		
 		return false;
-	// Ziurtatu '@' karakterea ez dela lehena.
-	if(str.indexOf("@") == 0)
+	}
+	if(str.indexOf("@") == 0){
+		alert('Ziurtatu "@" karakterea ez dela lehena.');	
 		return false;
-	// Ziurtatu '@' karakterearen ondoren '.' karaktereren bat badagoela.
-	if(str.lastIndexOf(".") < str.lastIndexOf("@"))
+	}
+	if(str.lastIndexOf(".") < str.lastIndexOf("@")){
+		alert(' Ziurtatu "@" karakterearen ondoren "." karaktereren bat badagoela.');	
 		return false;
-	// Ziurtatu azkeneko puntuaren atzetik gutxienez beste 2 karaktere daudela.
-	if(str.lastIndexOf(".") + 2 > str.length - 1)
+	}
+	if(str.lastIndexOf("@")+3 > str.lastIndexOf(".")){
+		alert('Ziurtatu "@"ren atzetik gutxienez beste 2 karaktere daudela.');	
 		return false;
+	}	
+	if(str.lastIndexOf(".") + 2 > str.length - 1){
+		alert('Ziurtatu azkeneko puntuaren atzetik gutxienez beste 2 karaktere daudela.');	
+		return false;
+	}
 	return true;
 }
 
@@ -50,7 +57,7 @@ function gehitusents()
 	var diva = document.getElementById("fi");
 	var zenb = document.getElementsByName('sizena[]').length+1;
 	var inputberria = document.createElement('input');
-	inputberria.innerHTML = "<input type=\"text\" class=\"input-large\" id=\"s"+zenb+"\" name=\"sizena[]\" placeholder=\"sentsore izena\" required=\"required\"/>";
+	inputberria.innerHTML = "<input type=\"text\" class=\"input-large\" id=\"s"+zenb+"\" name=\"sizena[]\" value=\"Sentsore izena\" onfocus=\"kendubalioa(this)\" onblur=\"emanbalioa(this,'Sentsore izena')\"/>";
 	diva.appendChild(inputberria.firstChild);
 }
 
@@ -64,20 +71,4 @@ function kendusents()
 	var szenb= "s"+zenb;
   	var olddiv = document.getElementById(szenb);
 	diva.removeChild(olddiv);
-}
-
-function AtzeaGorri(elementua)
-{
-  document.getElementById(elementua).style.background = "red";
-  document.getElementById(elementua).style.color = "Black";
-}
-function AtzeaTxuri(elementua)
-{
-  document.getElementById(elementua).style.background = "white";
-  document.getElementById(elementua).style.color = "Black";
-}
-function checkAkti()
-{
-
-  document.getElementById("publikatu").disabled = false;
 }

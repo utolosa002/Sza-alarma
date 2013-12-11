@@ -3,4 +3,4 @@
 	<!--styloak -->
 	<link href="./css/bootstrap.css" rel="stylesheet"></link>
 	<link href="./css/bootstrap-responsive.css" rel="stylesheet"></link>
-	<script type="text/javascript" src="js/scripta.js"></script>
+	<script type="text/javascript" src="./js/scripta.js"></script>

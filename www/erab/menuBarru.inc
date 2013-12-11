@@ -1,4 +1,3 @@
-<!-- zuzenean atzitu ahal ez izateko zerbait egin behar da!!!-->
 <div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<a class="brand" href="./erabiltzaile.php"><?php echo $_SESSION["erab"]; ?>! </a>

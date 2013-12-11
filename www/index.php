@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<?php include 'goiburua.inc' ?>
-		<?php include 'AutoSartu.inc' ?>
+		<?php include 'autoSartu.inc' ?>
 	</head>
 	<body>
 		<?php include 'menua.inc' ?>

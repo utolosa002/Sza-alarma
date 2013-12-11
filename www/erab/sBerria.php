@@ -1,3 +1,4 @@
+<?php include 'access.inc' ?>
 <?php
 /*
 Funtzio honek sentsorea gehitzen du.

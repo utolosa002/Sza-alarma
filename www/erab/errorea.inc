@@ -19,8 +19,8 @@
 			echo "Alarma errorea gertatu da!";
 		}else if($erroremota=="aaldatu"){
 			echo "Alarma egoera aldatzean errorea gertatu da!";
-		}else if($erroremota=="ajabea"){
-			echo "Alarmaren jabea izan behar duzu ezabatzeko!";
+		}else if($erroremota=="aelkarjabea"){
+			echo "Alarmaren jabea izan behar duzu elkarbanatzeko!";
 		}else if($erroremota=="aezabatu"){
 			echo "Alarma ezabatzean errorea gertatu da!";
 		}else if($erroremota=="konexio"){

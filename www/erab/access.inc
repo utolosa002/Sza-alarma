@@ -5,7 +5,7 @@ if(!isset($_SESSION))
     } 
 if(!isset($_SESSION["erab"]))
 {
-    include_once 'index.php';
+    include '../index.php';
     exit;
 }
 ?>

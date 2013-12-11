@@ -5,6 +5,6 @@ if(!isset($_SESSION))
     } 
 if(isset($_SESSION["erab"]))
 {
-			header("Location: ./erabiltzaile.php");
+			header("Location: ./erab/erabiltzaile.php");
 }
 ?>

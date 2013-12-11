@@ -1,10 +1,11 @@
+<?php include_once 'access.inc' ?>
 <?php
 /*
 Funtzio honek alarma berri bat sortzen du datu basean eta alarma berri horren ida 
 erabiltzailearenarekin lotzen du. Honela uneko erabiltzaileari alarma horren jabetza 
 ematen zaio.
 */
-	function sortuAlarma($pAIzena){
+	function sortuAlarma($pAIzena,$pAkti){
 		include 'konexioa.inc';
 		mysql_select_db($datuBasea,$link);
 		$erabil=$_SESSION["erab"];
@@ -15,7 +16,7 @@ ematen zaio.
       				$pIde = $balioa;
 			}
 		}
-		$query1="INSERT INTO `Alarma`(`idalarma`, `aizena`, `aegoera`, `jabeiderab`) VALUES (\"\",  \"$pAIzena\", 0,\"$pIde\")";
+		$query1="INSERT INTO `Alarma`(`idalarma`, `aizena`, `aegoera`, `jabeiderab`) VALUES (\"\",  \"$pAIzena\", \"$pAkti\",\"$pIde\")";
 		$Alarma1=mysql_query($query1,$link);
 		$pIda = mysql_insert_id();
 		if(mysql_affected_rows()==-1){
@@ -48,16 +49,20 @@ Boolerra itzultzen du.
 		}
 	}
 
-	$i=1; 
 	$pIzena=$_POST['Aizena'];
-	$aId=sortuAlarma($pIzena);
+	if(isset($_POST['egoera']) && $_POST['egoera'] == 'aktibatuta') {
+		$pEgoera=1;
+	}else{
+		$pEgoera=0;
+	}
+	$aId=sortuAlarma($pIzena,$pEgoera);
 	if ($aId>0){
 		foreach ($_POST['sizena'] as $index => $pIz){
 			if(!gehituSentsorea($pIz,$aId)){
 				header("Location: ./erabiltzaile.php?error&e=sgehi");
 			}
 		}	
-		header("Location: ./erabiltzaile.php?sentsoreak");
+		header("Location: ./erabiltzaile.php?alarmak");
 	}else{
 		header("Location: ./erabiltzaile.php?error&e=salarma");
 	}

@@ -1,4 +1,3 @@
-<?php include 'access.inc' ?>  
 <?php
 /*
 Funtzio honek uneko erabiltzailea ez diren erabiltzaileak itzultzen ditu (false hutsa bada).
@@ -61,7 +60,7 @@ Erabiltzailearen ida jaso eta bere alarmak lortzen ditu.
 			}
 		?>
 		
-		<form id="zureAlarmak" action="erabiltzailea_aldatu.php" method="post">
+		<form id="zureAlarmak" action="erabiltzaileaAldatu.php" method="post">
 			<fieldset>
 			
 			<table class="table table-stripedtable-condensed">
@@ -70,7 +69,7 @@ Erabiltzailearen ida jaso eta bere alarmak lortzen ditu.
 					<td><h3> Nicka </h3></td>	
 					<td><h3> Emaila </h3></td>
 					<td><h3> Bere Alarmak </h3></td>
-					<td><h3> hautatu </h3></td>
+					<td><h3> Hautatu </h3></td>
 				</tr>
 		<?php 
 					$i=0;
@@ -89,7 +88,7 @@ Erabiltzailearen ida jaso eta bere alarmak lortzen ditu.
 										$AlarmaS="";
 										$AlarmaS=lortuErabAlarmak($EDatuak);
 
-										$lerroa=$lerroa."<td><input type=\"text\" id=\"erab$j$k\" name=\"erab$j$k\" readonly=\"readonly\" value= \"$EDatuak\" /></td>\n";						
+										$lerroa=$lerroa."<td><input class=\"uneditable-input input-mini\" type=\"text\" id=\"erab$j$k\" name=\"erab$j$k\" readonly=\"readonly\" value= \"$EDatuak\" /></td>\n";						
 									}else{
 										$lerroa=$lerroa."<td><input type=\"text\" id=\"erab$j$k\" name=\"erab$j$k\" readonly=\"readonly\" value= \"$EDatuak\" /></td>\n";
 									}
